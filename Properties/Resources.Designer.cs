@@ -45,7 +45,7 @@ namespace HiddenInvervals.Properties
                 if ((resourceMan == null))
                 {
                     global::System.Resources.ResourceManager temp =
-                        new global::System.Resources.ResourceManager("HiddenInvervals.Properties.Resources",
+                        new global::System.Resources.ResourceManager("HiddenIntervals.Properties.Resources",
                             typeof(Resources).Assembly);
                     resourceMan = temp;
                 }

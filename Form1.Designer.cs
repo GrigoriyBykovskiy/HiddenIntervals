@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace HiddenInvervals
+namespace HiddenIntervals
 {
     partial class Form1
     {

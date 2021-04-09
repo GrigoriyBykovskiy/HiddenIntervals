@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using HiddenIntervals;
 
-namespace HiddenInvervals
+namespace HiddenIntervals
 {
     public partial class Form1 : Form
     {
@@ -29,7 +30,7 @@ namespace HiddenInvervals
                 {
                     string fileName = openFileDialog.FileName;
                     SteganoContainerEncrypt = ObjectFactory.CreateObject(fileName);
-                    SteganoContainerEncrypt.getRawFileData();
+                    SteganoContainerEncrypt.GetFileData();
                 }
             }
             catch
@@ -46,7 +47,7 @@ namespace HiddenInvervals
                 {
                     string fileName = openFileDialog.FileName;
                     SteganoContainerDecrypt = ObjectFactory.CreateObject(fileName);
-                    SteganoContainerDecrypt.getRawFileData();
+                    SteganoContainerDecrypt.GetFileData();
                 }
             }
             catch
@@ -97,9 +98,19 @@ namespace HiddenInvervals
             try
             {
                 SteganoModel obj = new SteganoModel();
-                string result = SteganoModel.Decrypt(SteganoContainerDecrypt.getRawFileData());
-                SteganoContainerDecrypt.putDataToFile(result);
-                richTextBox2.Text = result;
+                if (SteganoContainerDecrypt is SteganoDOCX)
+                {
+                    var result = SteganoModel.Decrypt(SteganoContainerDecrypt.GetData(true));
+                    SteganoContainerDecrypt.putDataToFile(result);
+                    richTextBox2.Text = result;
+                }
+                else
+                {
+                    var result = SteganoModel.Decrypt(SteganoContainerDecrypt.GetData());
+                    SteganoContainerDecrypt.putDataToFile(result);
+                    richTextBox2.Text = result;
+                }
+
                 MessageBox.Show("Успешно!\nФайл находится в директории:\n" + Directory.GetCurrentDirectory(), "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception excptn)
@@ -112,8 +123,18 @@ namespace HiddenInvervals
             try
             {
                 SteganoModel obj = new SteganoModel();
-                string result = SteganoModel.Encrypt(SteganoContainerEncrypt.getRawFileData(), richTextBox1.Text);
-                SteganoContainerEncrypt.putDataToFile(result);
+                if (SteganoContainerEncrypt is SteganoDOCX)
+                {
+                    var result = SteganoModel.Encrypt(SteganoContainerEncrypt.GetData(true), richTextBox1.Text);
+                    //richTextBox2.Text = string.Join("", result.ToArray());
+                    //richTextBox2.Text = result.Aggregate((x, y) => x + y);
+                    SteganoContainerEncrypt.putDataToFile(result);
+                }
+                else
+                {
+                    var result = SteganoModel.Encrypt(SteganoContainerEncrypt.GetData(), richTextBox1.Text);
+                    SteganoContainerEncrypt.putDataToFile(result);
+                }
                 MessageBox.Show("Успешно!\nФайл находится в директории:\n" + Directory.GetCurrentDirectory(), "Успех", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception excptn)
