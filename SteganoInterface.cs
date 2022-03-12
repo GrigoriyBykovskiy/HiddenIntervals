@@ -66,9 +66,11 @@ namespace HiddenIntervals
         
         public void putDataToFile(string data)
         {
-            if (!File.Exists(Directory.GetCurrentDirectory() + "\\output.txt"))
+            string date = DateTime.Now.ToString("HH_mm_ss_");
+            string path = Directory.GetCurrentDirectory() + "\\" + date + "output.txt";
+            if (!File.Exists(path))
             {
-                StreamWriter sw = new StreamWriter(Directory.GetCurrentDirectory() +  "\\output.txt", true, Encoding.UTF8);
+                StreamWriter sw = new StreamWriter(path, true, Encoding.UTF8);
                 foreach (var ch in data)
                 {
                     sw.Write(ch);
@@ -116,12 +118,14 @@ namespace HiddenIntervals
 
         public void putDataToFile(string data)
         {
-            if (!File.Exists(Directory.GetCurrentDirectory() + "\\output.rtf"))
+            string date = DateTime.Now.ToString("HH_mm_ss_");
+            string path = Directory.GetCurrentDirectory() + "\\" + date + "output.rtf";
+            if (!File.Exists(path))
             {
                 using (var rtf = new RichTextBox())
                 {
                     rtf.AppendText(data);
-                    rtf.SaveFile(Directory.GetCurrentDirectory() +  "\\output.rtf", RichTextBoxStreamType.RichText);
+                    rtf.SaveFile(path, RichTextBoxStreamType.RichText);
                 }
             }
             else
@@ -159,11 +163,7 @@ namespace HiddenIntervals
         {
             using (WordprocessingDocument doc = WordprocessingDocument.Open(pathFile, false))
             {
-                //get full text
-                //var text = doc.MainDocumentPart.Document.Body.InnerText;
-                //Console.WriteLine(rawText);
                 var body = doc.MainDocumentPart.Document.Body;
-                
                 foreach (var para in body.Elements<Paragraph>())
                 {
                     foreach (var run in para.Elements<Run>())
@@ -174,69 +174,16 @@ namespace HiddenIntervals
                         }
                     }
                 }
-                //string mainPart = doc.MainDocumentPart.Document.Body.InnerText;
-                // using (WordprocessingDocument docNew = WordprocessingDocument.Create(@"C:\Users\User\source\repos\HiddenIntervals\newdoc.docx", WordprocessingDocumentType.Document))
-                // {
-                //     // copy parts from source document to new document
-                //     foreach (var part in doc.Parts)
-                //         docNew.AddPart(part.OpenXmlPart, part.RelationshipId);
-                //
-                //     var body = docNew.MainDocumentPart.Document.Body;
-                //
-                //     foreach (var para in body.Elements<Paragraph>())
-                //     {
-                //         foreach (var run in para.Elements<Run>())
-                //         {
-                //             foreach (var text in run.Elements<Text>())
-                //             {
-                //                 textList.Add(text.Text);
-                //             }
-                //         }
-                //     }
-                // }
-                // Console.WriteLine(textList);
-                // // counter 
-                // int lenght_probel = 0;
-                // StringBuilder sb = new StringBuilder();
-                // foreach (var str in textList)
-                // {
-                //     lenght_probel += str.Where(x => x == ' ').Count();
-                //     foreach (byte b in System.Text.Encoding.Default.GetBytes(str))
-                //     {
-                //         sb.Append(Convert.ToString(b, 2).PadLeft(8, '0'));
-                //     }
-                // }
                 doc.Close();
             }
         }
-
-        // public string GetRawFileData()
-        // {
-        //     using (WordprocessingDocument doc = WordprocessingDocument.Open(this.pathFile, false))
-        //     {
-        //         string buf = doc.MainDocumentPart.Document.Body.InnerText;
-        //         data = buf;
-        //         return data;
-        //     }
-        // }
+        
 
         public void putDataToFile(string data)
         {
-            // Create a document by supplying the filepath. 
-            // using (WordprocessingDocument wordDocument =
-            //     WordprocessingDocument.Create(Directory.GetCurrentDirectory() +  "\\output.docx", WordprocessingDocumentType.Document))
-            // {
-            //     // Add a main document part. 
-            //     MainDocumentPart mainPart = wordDocument.AddMainDocumentPart();
-            //
-            //     // Create the document structure and add some text.
-            //     mainPart.Document = new Document();
-            //     Body body = mainPart.Document.AppendChild(new Body());
-            //     Paragraph para = body.AppendChild(new Paragraph());
-            //     Run run = para.AppendChild(new Run());
-            //     run.AppendChild(new Text(data));
-            // }
-            using ( WordprocessingDocument package = WordprocessingDocument.Create(Directory.GetCurrentDirectory() +  "\\output.docx",
+            string date = DateTime.Now.ToString("HH_mm_ss_");
+            string path = Directory.GetCurrentDirectory() + "\\" + date + "output.docx";
+            using ( WordprocessingDocument package = WordprocessingDocument.Create(path,
                 WordprocessingDocumentType.Document))
             {
                 // Add a new main document part.
@@ -263,7 +210,9 @@ namespace HiddenIntervals
         {
             using (WordprocessingDocument doc = WordprocessingDocument.Open(pathFile, false))
             {
-                var docNew = (WordprocessingDocument) doc.Clone(Directory.GetCurrentDirectory() +  "\\output.docx", true);
+                string date = DateTime.Now.ToString("HH_mm_ss_");
+                string path = Directory.GetCurrentDirectory() + "\\" + date + "output.docx";
+                var docNew = (WordprocessingDocument) doc.Clone(path, true);
                 var body = docNew.MainDocumentPart.Document.Body;
                 
                 var count = 0;
@@ -280,29 +229,6 @@ namespace HiddenIntervals
                     }
                 }
                 docNew.Close();
-                // using (WordprocessingDocument docNew = WordprocessingDocument.Create(Directory.GetCurrentDirectory() +  "\\output.docx", WordprocessingDocumentType.Document))
-                // {
-                //     // copy parts from source document to new document
-                //     foreach (var part in doc.Parts)
-                //         docNew.AddPart(part.OpenXmlPart, part.RelationshipId);
-                //
-                //     var body = docNew.MainDocumentPart.Document.Body;
-                //
-                //     var count = 0;
-                //
-                //     foreach (var para in body.Elements<Paragraph>())
-                //     {
-                //         foreach (var run in para.Elements<Run>())
-                //         {
-                //             foreach (var text in run.Elements<Text>())
-                //             {
-                //                 text.Text = data[count];
-                //                 count++;
-                //             }
-                //         }
-                //     }
-                //     docNew.Close();
-                // }
                 doc.Close();
             }
             return true;
@@ -310,12 +236,10 @@ namespace HiddenIntervals
     }
     public interface IStegano
     {
-        // need preprocessor for trim multiple ' '
         void GetFileData();
         string GetData();
         List<string> GetData(bool flag);
         void putDataToFile(string data);
         bool putDataToFile(List<string> data);
-        //void getFileData();
     }
 }
